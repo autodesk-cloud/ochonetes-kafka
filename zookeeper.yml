@@ -1,0 +1,6 @@
+cluster:  zookeeper
+image:    paugamo/k8s-ec2-zookeeper
+ports:
+    - 2181
+    - 2888
+    - 3888
