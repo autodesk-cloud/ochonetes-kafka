@@ -2,8 +2,8 @@
 
 ### Overview
 
-You need to setup & run quick a bunch of [**Kafka**](http://kafka.apache.org/) brokers ? You are afraid of setting the
-underlying [**Zookeeper**](https://zookeeper.apache.org/) ensemble ? You love
+You need to setup & run quick a bunch of [**Kafka**](http://kafka.apache.org/) brokers ? You are afraid of monkeying
+with the underlying [**Zookeeper**](https://zookeeper.apache.org/) ensemble ? You are cool and love
 [**Kubernetes**](https://github.com/GoogleCloudPlatform/kubernetes) ?
 
 Good news, you can easily leverage [**Ochonetes**](https://github.com/autodesk-cloud/ochonetes) and get everything
@@ -13,7 +13,8 @@ running in no time !
 
 We propose two simple containers that will do all the magic for you. You can look at the code in the ```images/```
 folder. We basically have a [**Zookeeper**](https://zookeeper.apache.org/) container that will self-cluster into an
-ensemble and a [**Kafka**](http://kafka.apache.org/) container which relies on that ensemble.
+ensemble and a [**Kafka**](http://kafka.apache.org/) container which relies on that ensemble (e.g it will actively
+wait on it and use the IPs in its configuration file).
 
 How do they know about each other ? Go look at [**Ochopod**](https://github.com/autodesk-cloud/ochopod) for details
 about that magical process. What you want is to deploy these two guys in the same clustering _scope_ and they will
@@ -21,7 +22,6 @@ find each other. I said it was easy right ?
 
 If you are curious try deploying less than 3 [**Zookeeper**](https://zookeeper.apache.org/) containers. The
 [**Kafka**](http://kafka.apache.org/) containers will then boot but refuse to configure until this condition is met.
-
 Please note I included a fairly simple [**Kafka**](http://kafka.apache.org/) container which will use a local
 ```/var/lib/kafka``` to store its logs. Feel free to mount something or even allocate a volume on the fly.
 
@@ -40,11 +40,16 @@ own settings.
 You want 4 brokers ? No problemo, do the following:
 
 ```
-$ curl -X POST -H "X-Shell:deploy zk -p 3 -n test" -F "zk=@zookeeper.yml" http://<PROXY NODE IP>:9000/shell
-$ curl -X POST -H "X-Shell:deploy kafka -p 4 -n test" -F "kafka=@kafka.yml" http://<PROXY NODE IP>:9000/shell
+$ ./cli.py
+welcome to the ocho CLI ! (CTRL-C to exit)
+> deploy zookeeper -p 3 -n test
+100% success / spawned 3 pod(s)
+
+> deploy kafka -p 4 -n test
+100% success / spawned 4 pod(s)
 ```
 
-Wait a bit, peek into the web-console and you should see your brokers. For instance:
+Wait a bit and you should see your brokers. For instance:
 
 ```
 > grep test.kafka
@@ -63,7 +68,8 @@ Your brokers are now functional. Note their IP and use them from any other pod o
 playing with them you can tear the whole thing down in one shot :
 
 ```
-$ curl -X POST -H "X-Shell:kill test.kafka test.zookeeper" http://<PROXY NODE IP>:9000/shell
+> kill "test.*"
+$ 100% success / killed 7 pod(s)
 ```
 
 ### Support
