@@ -34,10 +34,8 @@ I am talking about.
 
 #### Step 2 : deploy your two tiers
 
-Let us CURL a bit. If have a specific broker configuration in mind first edit ```kafka.yml``` and specify your
-own settings.
-
-You want 4 brokers ? No problemo, do the following:
+If have a specific broker configuration in mind first edit ```kafka.yml``` and specify your own settings. You want 4
+brokers ? No problemo, use our cool CLI and do the following:
 
 ```
 $ ./cli.py
