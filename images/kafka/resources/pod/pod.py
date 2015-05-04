@@ -18,9 +18,8 @@ import json
 import logging
 import os
 
-from boto import ec2
 from jinja2 import Environment, FileSystemLoader
-from ochopod.bindings.ec2.marathon import Pod
+from ochopod.bindings.ec2.kubernetes import Pod
 from ochopod.core.fsm import diagnostic
 from ochopod.core.utils import merge, retry, shell
 from ochopod.models.piped import Actor as Piped
